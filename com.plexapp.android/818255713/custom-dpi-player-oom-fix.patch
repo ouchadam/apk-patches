@@ -1,0 +1,11 @@
+--- smali_classes2/com/plexapp/plex/player/ui/huds/BackgroundHud.smali	2021-02-15 17:50:37.780467254 +0000
++++ smali_classes2/com/plexapp/plex/player/ui/huds/BackgroundHud.smali	2021-02-15 17:53:17.098247301 +0000
+@@ -209,8 +209,6 @@
+     .line 12
+     iget-object v3, p0, Lcom/plexapp/plex/player/ui/huds/BackgroundHud;->m_background:Lcom/plexapp/plex/utilities/NetworkImageView;
+ 
+-    invoke-virtual {v3, v1, v2}, Lcom/plexapp/plex/utilities/NetworkImageView;->e(Ljava/lang/String;Lcom/plexapp/plex/utilities/e4;)V
+-
+     .line 13
+     invoke-virtual {p0}, Lcom/plexapp/plex/player/ui/huds/d1;->getPlayer()Lcom/plexapp/plex/player/i;
+ 
