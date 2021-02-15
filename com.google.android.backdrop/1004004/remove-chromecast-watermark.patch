@@ -1,0 +1,38 @@
+The backdrop apk is simply a wrapper around a webview which hits https://clients3.google.com/cast/chromecast/home?iv=atv
+In the case of androidtv (chromecast built-in) all we need to do is remove the `iv=atv` parameter to remove the chromecast messaging.
+
+There's also a local server for interacting with the `Google home` settings, without this server we end up stuck with only _featured photos_. 
+Luckily the server is available it's just being blocked by the new android P security rules for clear text traffic, we can fix that by adding a domain allow rule for `localhost`.
+--- AndroidManifest.xml
++++ AndroidManifest.xml
+@@ -6,7 +6,7 @@
+     <uses-feature android:name="android.hardware.type.television" android:required="true"/>
+     <uses-feature android:name="android.software.leanback" android:required="true"/>
+     <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+-    <application android:icon="@drawable/ic_launcher" android:label="@string/dream_name">
++    <application android:icon="@drawable/ic_launcher" android:label="@string/dream_name" android:networkSecurityConfig="@xml/network_security_config">
+         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+         <service android:exported="true" android:name=".Backdrop" android:permission="android.permission.BIND_DREAM_SERVICE">
+             <intent-filter>
+
+--- smali/com/google/android/backdrop/Backdrop.smali	 
++++ smali/com/google/android/backdrop/Backdrop.smali
+@@ -424,7 +424,8 @@
+     .line 128
+     nop
+ 
+-    invoke-virtual {v0, p1}, Landroid/webkit/WebView;->loadUrl(Ljava/lang/String;)V
++    const-string v1, "https://clients3.google.com/cast/chromecast/home"
++    invoke-virtual {v0, v1}, Landroid/webkit/WebView;->loadUrl(Ljava/lang/String;)V
+ 
+     goto :goto_6
+ 
+--- res/xml/network_security_config.xml
++++ res/xml/network_security_config.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<network-security-config>
++    <domain-config cleartextTrafficPermitted="true" >
++        <domain includeSubdomains="true">localhost</domain>
++    </domain-config>
++</network-security-config>
